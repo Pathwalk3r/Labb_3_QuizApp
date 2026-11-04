@@ -10,7 +10,19 @@
 
   <ItemGroup>
     <Folder Include="Dialogs\" />
-    <Folder Include="Views\" />
+    <None Remove="Images\OPTIONS.png" />
+
+	<None Remove="Images\QuizAppMainImage.png" />
+
+	<None Remove="Images\START.png" />
+
+	<Resource Include="Images\OPTIONS.png" />
+	<Resource Include="Images\QuizAppMainImage.png" />
+	<Resource Include="Images\START.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
   </ItemGroup>
 
 </Project>

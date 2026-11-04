@@ -4,9 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuizApp"
+        xmlns:views="clr-namespace:QuizApp.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        DataContext="MainWindowViewModel"
+        Title="Quiz App" Height="450" Width="800"
+        Background="Beige">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <views:MenuView Grid.Row="0"/>
+        <views:PlayerView 
+            Grid.Row="1"
+            Visibility="{Binding PlayerVisibility}"/>
+        <views:StartView 
+            Grid.Row="1"
+            Visibility="{Binding StartVisibility}"/>
+        <views:ConfigurationView 
+            Grid.Row="1" 
+            Visibility="{Binding ConfigurationVisibility}"/>
     </Grid>
 </Window>

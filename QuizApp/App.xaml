@@ -4,6 +4,12 @@
              xmlns:local="clr-namespace:QuizApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <BitmapImage x:Key="QuizAppMainImage"
+                     UriSource="pack://application:,,,/Images/QuizAppMainImage.png"/>
+        <BitmapImage x:Key="OPTIONS"
+             UriSource="pack://application:,,,/Images/OPTIONS.png"/>
+        <BitmapImage x:Key="START"
+     UriSource="pack://application:,,,/Images/START.png"/>
+        <Style TargetType="{x:Type Button}"/>
     </Application.Resources>
 </Application>
