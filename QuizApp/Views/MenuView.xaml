@@ -25,6 +25,13 @@
             <MenuItem 
                 Header="_Edit" 
                 Command="{Binding MainWindowViewModel.ShowConfigurationCommand}"/>
+            <MenuItem 
+                Header="View">
+                <MenuItem 
+                    Header="Main Menu"
+                    Command="{Binding MainWindowViewModel.ShowStartCommand}"
+                    />
+            </MenuItem>
         </Menu>
     </Grid>
 </UserControl>

@@ -4,7 +4,9 @@ internal class PlayerViewModel : ViewModelBase
 {
 	private readonly MainWindowViewModel? _mainWindowViewModel;
 
-	public PlayerViewModel(MainWindowViewModel? mainWindowViewModel)
+    public QuestionPackViewModel? ActivePack { get => _mainWindowViewModel?.ActivePack; }
+
+    public PlayerViewModel(MainWindowViewModel? mainWindowViewModel)
 	{
 		_mainWindowViewModel = mainWindowViewModel;
 	}
