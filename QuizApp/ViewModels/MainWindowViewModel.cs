@@ -60,13 +60,15 @@ internal class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
-		PlayerViewModel = new PlayerViewModel(this);
+        PlayerViewModel = new PlayerViewModel(this);
         ConfigurationViewModel = new ConfigurationViewModel(this);
         MenuViewModel = new MenuViewModel(this);
 
-        //ShowStartCommand = new RelayCommand(_ => ShowView(AppView.Start));
-        //ShowPlayerCommand = new RelayCommand(_ => ShowView(AppView.Player));
-        //ShowConfigurationCommand = new RelayCommand(_ => ShowView(AppView.Configuration));
+        ShowStartCommand = new RelayCommand(_ => CurrentView = this);
+        ShowPlayerCommand = new RelayCommand(_ => CurrentView = PlayerViewModel);
+        ShowConfigurationCommand = new RelayCommand(_ => CurrentView = ConfigurationViewModel);
+
+        CurrentView = this;
 
         var questionPack = new QuestionPack("Mina frågor!");
         questionPack.Questions.Add(new Question("Vad heter Sveriges huvudstad?", "Stockholm", "Oslo", "Göteborg", "London"));
