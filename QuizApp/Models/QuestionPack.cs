@@ -1,7 +1,7 @@
 ﻿namespace QuizApp.Models;
 
 internal enum Difficulty { Easy, Medium, Hard };
-internal class QuestionPack
+class QuestionPack
 {
     public QuestionPack(string name, Difficulty difficulty = Difficulty.Medium, int timeLimitInSeconds = 30)
     {

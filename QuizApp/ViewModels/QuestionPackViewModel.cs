@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace QuizApp.ViewModels;
 
-internal class QuestionPackViewModel : ViewModelBase
+class QuestionPackViewModel : ViewModelBase
 {
     private readonly QuestionPack _model;
 
