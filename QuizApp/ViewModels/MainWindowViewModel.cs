@@ -35,18 +35,6 @@ internal class MainWindowViewModel : ViewModelBase
         }
     }
 
-    //private enum AppView { Start, Player, Configuration }
-    //private AppView _currentView = AppView.Start;
-
-    //public Visibility StartVisibility => 
-    //    _currentView == AppView.Start ? Visibility.Visible : Visibility.Collapsed;
-
-    //public Visibility PlayerVisibility =>
-    //    _currentView == AppView.Player ? Visibility.Visible : Visibility.Collapsed;
-
-    //public Visibility ConfigurationVisibility =>
-    //    _currentView == AppView.Configuration ? Visibility.Visible : Visibility.Collapsed;
-
     public PlayerViewModel? PlayerViewModel { get; }
 
     public ConfigurationViewModel? ConfigurationViewModel { get; }
@@ -60,6 +48,13 @@ internal class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
+
+        var questionPack = new QuestionPack("Mina frågor!");
+        questionPack.Questions.Add(new Question("Vad heter Sveriges huvudstad?", "Stockholm", "Oslo", "Göteborg", "London"));
+        questionPack.Questions.Add(new Question("Vad är 2 + 3?", "5", "10", "8", "1"));
+
+        ActivePack = new QuestionPackViewModel(questionPack);
+
         PlayerViewModel = new PlayerViewModel(this);
         ConfigurationViewModel = new ConfigurationViewModel(this);
         MenuViewModel = new MenuViewModel(this);
@@ -69,19 +64,6 @@ internal class MainWindowViewModel : ViewModelBase
         ShowConfigurationCommand = new RelayCommand(_ => CurrentView = ConfigurationViewModel);
 
         CurrentView = this;
-
-        var questionPack = new QuestionPack("Mina frågor!");
-        questionPack.Questions.Add(new Question("Vad heter Sveriges huvudstad?", "Stockholm", "Oslo", "Göteborg", "London"));
-        questionPack.Questions.Add(new Question("Vad är 2 + 3?", "5", "10", "8", "1"));
-
-        ActivePack = new QuestionPackViewModel(questionPack);
+ 
     }
-
-    //private void ShowView(AppView view)
-    //{
-    //    _currentView = view;
-    //    RaisePropertyChanged(nameof(StartVisibility));
-    //    RaisePropertyChanged(nameof(PlayerVisibility));
-    //    RaisePropertyChanged(nameof(ConfigurationVisibility));
-    //}
 }
