@@ -13,19 +13,121 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock 
-            Text="{Binding ActivePack.Questions[0].Query}" 
+            Text="{Binding CurrentQuestion.Query}" 
             FontSize="24" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Center"/>
-        <WrapPanel 
-            Grid.Row="1" 
+        <Grid Grid.Row="1"
+            Width="350"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Width="350">
-            <Button Content="{Binding ActivePack.Questions[0].CorrectAnswer}" Width="150" Padding="5 5 5 5" Margin="15 15 15 15"/>
-            <Button Content="{Binding ActivePack.Questions[0].IncorrectAnswer[0]}" Width="150" Padding="5 5 5 5" Margin="0 15 15 15"/>
-            <Button Content="{Binding ActivePack.Questions[0].IncorrectAnswer[1]}" Width="150" Padding="5 5 5 5" Margin="15 0 15 15"/>
-            <Button Content="{Binding ActivePack.Questions[0].IncorrectAnswer[2]}" Width="150" Padding="5 5 5 5" Margin="0 0 15 15"/>
-        </WrapPanel>
+            VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="Answer1"
+                Grid.Row="0" Grid.Column="0"
+                Command="{Binding CheckAnswerCommand}"
+                CommandParameter="0"
+                Margin="8"
+                Padding="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CorrectAnswerIndex}" Value="0">
+                                <Setter Property="Background" Value="LightGreen"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IncorrectAnswerIndex}" Value="0">
+                                <Setter Property="Background" Value="LightCoral"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <TextBlock Text="{Binding Answers[0]}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+            </Button>
+
+            <Button x:Name="Answer2"
+                Grid.Row="0" Grid.Column="1"
+                Command="{Binding CheckAnswerCommand}"
+                CommandParameter="1"
+                Margin="8"
+                Padding="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CorrectAnswerIndex}" Value="1">
+                                <Setter Property="Background" Value="LightGreen"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IncorrectAnswerIndex}" Value="1">
+                                <Setter Property="Background" Value="LightCoral"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <TextBlock Text="{Binding Answers[1]}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+            </Button>
+            <Button x:Name="Answer3"
+                Grid.Row="1" Grid.Column="0"
+                Command="{Binding CheckAnswerCommand}"
+                CommandParameter="2"
+                Margin="8"
+                Padding="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CorrectAnswerIndex}" Value="2">
+                                <Setter Property="Background" Value="LightGreen"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IncorrectAnswerIndex}" Value="2">
+                                <Setter Property="Background" Value="LightCoral"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <TextBlock Text="{Binding Answers[2]}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"/>
+            </Button>
+
+            <Button x:Name="Answer4"
+                Grid.Row="1" Grid.Column="1"
+                Command="{Binding CheckAnswerCommand}"
+                CommandParameter="3"
+                Margin="8"
+                Padding="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CorrectAnswerIndex}" Value="3">
+                                <Setter Property="Background" Value="LightGreen"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IncorrectAnswerIndex}" Value="3">
+                                <Setter Property="Background" Value="LightCoral"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <TextBlock Text="{Binding Answers[3]}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+            </Button>
+        </Grid>
     </Grid>
 </UserControl>
