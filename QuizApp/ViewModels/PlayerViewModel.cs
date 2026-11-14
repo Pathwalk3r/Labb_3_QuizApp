@@ -213,6 +213,7 @@ class PlayerViewModel : ViewModelBase
 
         AreAnswersEnabled = false;
         CheckAnswerCommand.RaiseCanExecuteChanged();
+        StopQuestionTimer();
         _advanceTimer.Start();
     }
 
@@ -223,6 +224,77 @@ class PlayerViewModel : ViewModelBase
 
         CurrentQuestionIndex = (CurrentQuestionIndex + 1) % questions.Count;
         RandomizeAnswerPosition();
+        StartQuestionTimer();
+    }
+
+    private CancellationTokenSource? _questionTimerCts;
+
+    private int _timeRemainingSeconds;
+    public int TimeRemainingSeconds
+    {
+        get => _timeRemainingSeconds;
+        private set => SetProperty(ref _timeRemainingSeconds, value);
+    }
+
+    public void StartQuestionTimer()
+    {
+        StopQuestionTimer();
+
+        int limitSeconds = Math.Max(1, ActivePack?.TimeLimitInSeconds ?? 1);
+        TimeRemainingSeconds = limitSeconds;
+
+        _questionTimerCts = new CancellationTokenSource();
+        _ = RunQuestionTimerAsync(limitSeconds, _questionTimerCts.Token);
+    }
+
+    private void StopQuestionTimer()
+    {
+        var timer = _questionTimerCts;
+        _questionTimerCts = null;
+        timer?.Cancel();
+        timer?.Dispose();
+    }
+
+    private void HandleTimeExpired()
+    {
+        if (!AreAnswersEnabled || CurrentQuestion is not { } question)
+            return;
+
+        CorrectAnswerIndex = Answers.IndexOf(question.CorrectAnswer);
+        IncorrectAnswerIndex = -1;
+        AreAnswersEnabled = false;
+        CheckAnswerCommand.RaiseCanExecuteChanged();
+        _advanceTimer.Start();
+    }
+
+    private async Task RunQuestionTimerAsync(
+        int limitSeconds,
+        CancellationToken cancellationToken)
+    {
+        var stopwatch = Stopwatch.StartNew();
+        var limit = TimeSpan.FromSeconds(limitSeconds);
+
+        try
+        {
+            while (true)
+            {
+                TimeSpan remaining = limit - stopwatch.Elapsed;
+
+                if (remaining <= TimeSpan.Zero)
+                {
+                    TimeRemainingSeconds = 0;
+                    HandleTimeExpired();
+                    return;
+                }
+
+                TimeRemainingSeconds = (int)Math.Ceiling(remaining.TotalSeconds);
+                await Task.Delay(100, cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // The player answered or the question changed.
+        }
     }
 
 }

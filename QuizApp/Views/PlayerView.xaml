@@ -17,6 +17,11 @@
             FontSize="24" 
             HorizontalAlignment="Center" 
             VerticalAlignment="Center"/>
+        <TextBlock
+            Text="{Binding TimeRemainingSeconds}"
+            FontSize="24"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"/>
         <Grid Grid.Row="1"
             Width="350"
             HorizontalAlignment="Center"
