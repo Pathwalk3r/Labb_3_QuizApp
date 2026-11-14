@@ -293,7 +293,7 @@ class PlayerViewModel : ViewModelBase
         }
         catch (OperationCanceledException)
         {
-            // The player answered or the question changed.
+
         }
     }
 
