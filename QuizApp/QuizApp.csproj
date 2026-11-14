@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dialogs\" />
     <None Remove="Images\OPTIONS.png" />
 
 	<None Remove="Images\QuizAppMainImage.png" />

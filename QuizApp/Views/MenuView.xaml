@@ -13,9 +13,18 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_New Question Pack" 
                           Icon="{fa:Icon FolderPlus}"
-                          Command="{Binding Path=ChangePackNameCommand}"/>
-                <MenuItem Header="_Select Question Pack">
-                    <MenuItem Header="{Binding ActivePack.Name}"/>
+                          Command="{Binding CreatePackCommand}"/>
+                <MenuItem Header="_Select Question Pack"
+                        ItemsSource="{Binding SavedPacks}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Command"
+                                    Value="{Binding DataContext.SelectPackCommand,
+                                    RelativeSource={RelativeSource AncestorType={x:Type local:MenuView}}}"/>
+                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
                 </MenuItem>
                 <MenuItem 
                     Header="E_xit"

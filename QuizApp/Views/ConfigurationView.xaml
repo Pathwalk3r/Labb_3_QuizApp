@@ -14,6 +14,22 @@
         <StackPanel Grid.Column="0" Margin="10 5 10 10">
             <Label
                 Content="{Binding ActivePack.Name}"/>
+
+            <WrapPanel Margin="0,0,0,8">
+                <Button Content="Edit pack"
+                    Command="{Binding EditPackCommand}"
+                    Margin="2"/>
+                <Button Content="Add question"
+                    Command="{Binding AddQuestionCommand}"
+                    Margin="2"/>
+                <Button Content="Remove question"
+                    Command="{Binding RemoveQuestionCommand}"
+                    Margin="2"/>
+                <Button Content="Save pack"
+                    Command="{Binding SavePackCommand}"
+                    Margin="2"/>
+            </WrapPanel>
+
             <ListBox 
                 x:Name="QuestionBox" 
                 Height="325"
@@ -33,17 +49,24 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
-        <StackPanel Grid.Column="1" Margin="0 5 10 10">
-            <Label Content="Question:" />
-            <TextBox Text="{Binding SelectedItem.Query, ElementName=QuestionBox}" Height="75"/>
-            <Label Content="Correct answer:"/>
-            <TextBox Text="{Binding SelectedItem.CorrectAnswer, ElementName=QuestionBox}"/>
-            <Label Content="Incorrect answer 1:"/>
-            <TextBox Text="{Binding SelectedItem.IncorrectAnswer[0], ElementName=QuestionBox}"/>
-            <Label Content="Incorrect answer 2:"/>
-            <TextBox Text="{Binding SelectedItem.IncorrectAnswer[1], ElementName=QuestionBox}"/>
-            <Label Content="Incorrect answer 3:"/>
-            <TextBox Text="{Binding SelectedItem.IncorrectAnswer[2], ElementName=QuestionBox}"/>
+        <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock Text="Question:"/>
+            <TextBox Text="{Binding SelectedQuestion.Query, UpdateSourceTrigger=PropertyChanged}"
+             Height="75"
+             AcceptsReturn="True"
+             TextWrapping="Wrap"/>
+
+            <TextBlock Text="Correct answer:" Margin="0,8,0,0"/>
+            <TextBox Text="{Binding SelectedQuestion.CorrectAnswer, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Text="Incorrect answer 1:" Margin="0,8,0,0"/>
+            <TextBox Text="{Binding SelectedQuestion.IncorrectAnswer[0], UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Text="Incorrect answer 2:" Margin="0,8,0,0"/>
+            <TextBox Text="{Binding SelectedQuestion.IncorrectAnswer[1], UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Text="Incorrect answer 3:" Margin="0,8,0,0"/>
+            <TextBox Text="{Binding SelectedQuestion.IncorrectAnswer[2], UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
     </Grid>
 </UserControl>
