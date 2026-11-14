@@ -60,7 +60,14 @@ internal class MainWindowViewModel : ViewModelBase
         MenuViewModel = new MenuViewModel(this);
 
         ShowStartCommand = new RelayCommand(_ => CurrentView = this);
-        ShowPlayerCommand = new RelayCommand(_ => CurrentView = PlayerViewModel);
+        ShowPlayerCommand = new RelayCommand(_ =>
+        {
+            if (PlayerViewModel is null)
+                return;
+
+            PlayerViewModel.StartQuestionTimer();
+            CurrentView = PlayerViewModel;
+        });
         ShowConfigurationCommand = new RelayCommand(_ => CurrentView = ConfigurationViewModel);
 
         CurrentView = this;
