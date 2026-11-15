@@ -297,4 +297,28 @@ class PlayerViewModel : ViewModelBase
         }
     }
 
+    public void RaiseActivePackChanged(bool startTimer)
+    {
+        _advanceTimer.Stop();
+        StopQuestionTimer();
+
+        CurrentQuestionIndex = 0;
+        RaisePropertyChanged(nameof(ActivePack));
+        RaisePropertyChanged(nameof(CurrentQuestion));
+
+        CorrectAnswerIndex = -1;
+        IncorrectAnswerIndex = -1;
+        Answers = new List<string>();
+        Answer1 = "";
+        Answer2 = "";
+        Answer3 = "";
+        Answer4 = "";
+        AreAnswersEnabled = true;
+
+        RandomizeAnswerPosition();
+
+        if (startTimer && ActivePack?.Questions.Count > 0)
+            StartQuestionTimer();
+    }
+
 }

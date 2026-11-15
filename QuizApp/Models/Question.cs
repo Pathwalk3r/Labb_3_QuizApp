@@ -1,12 +1,28 @@
-﻿namespace QuizApp.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace QuizApp.Models;
 
 internal class Question
 {
-    public Question(string query, string correctAnswer, string incorrectAnswer1, string incorrectAnswer2, string incorrectAnswer3)
+    [JsonConstructor]
+    public Question(string query, string correctAnswer, string[] incorrectAnswer)
     {
         Query = query;
         CorrectAnswer = correctAnswer;
-        IncorrectAnswer = [incorrectAnswer1, incorrectAnswer2, incorrectAnswer3];
+        IncorrectAnswer = incorrectAnswer;
+    }
+
+    public Question(
+        string query,
+        string correctAnswer,
+        string incorrectAnswer1,
+        string incorrectAnswer2,
+        string incorrectAnswer3)
+        : this(
+            query,
+            correctAnswer,
+            [incorrectAnswer1, incorrectAnswer2, incorrectAnswer3])
+    {
     }
 
     public string Query { get; set; }

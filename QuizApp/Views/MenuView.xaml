@@ -29,16 +29,25 @@
                 <MenuItem 
                     Header="E_xit"
                     Command="{Binding Path=ExitApplicationCommand}"
-                    InputGestureText="Alt+F4"/>
+                    InputGestureText="Alt+F4"
+                    />
             </MenuItem>
+
             <MenuItem 
-                Header="_Edit" 
-                Command="{Binding MainWindowViewModel.ShowConfigurationCommand}"/>
+                Header="_Edit">
+                <MenuItem Header="Pack Options"
+                          Command="{Binding MainWindowViewModel.ConfigurationViewModel.EditPackCommand}"/>
+            </MenuItem>
+
             <MenuItem 
                 Header="View">
                 <MenuItem 
                     Header="Main Menu"
                     Command="{Binding MainWindowViewModel.ShowStartCommand}"
+                    />
+                <MenuItem 
+                    Header="Pack Editor" 
+                    Command="{Binding MainWindowViewModel.ShowConfigurationCommand}"
                     />
             </MenuItem>
         </Menu>

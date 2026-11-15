@@ -59,6 +59,9 @@ internal class MainWindowViewModel : ViewModelBase
             {
                 ConfigurationViewModel?.RaiseActivePackChanged();
                 MenuViewModel?.RaiseActivePackChanged();
+
+                PlayerViewModel?.RaiseActivePackChanged(
+                    startTimer: ReferenceEquals(_currentView, PlayerViewModel));
             }
         }
     }
@@ -77,12 +80,6 @@ internal class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
 
-        var questionPack = new QuestionPack("Mina frågor!");
-        questionPack.Questions.Add(new Question("Vad heter Sveriges huvudstad?", "Stockholm", "Oslo", "Göteborg", "London"));
-        questionPack.Questions.Add(new Question("Vad är 2 + 3?", "5", "10", "8", "1"));
-
-        ActivePack = new QuestionPackViewModel(questionPack);
-
         PlayerViewModel = new PlayerViewModel(this);
         ConfigurationViewModel = new ConfigurationViewModel(this);
         MenuViewModel = new MenuViewModel(this);
@@ -99,7 +96,7 @@ internal class MainWindowViewModel : ViewModelBase
         ShowConfigurationCommand = new RelayCommand(_ => CurrentView = ConfigurationViewModel);
 
         CurrentView = this;
- 
+        LoadFirstSavedPack();
     }
 
     public QuestionPack LoadQuestionPack(string filePath)
@@ -132,6 +129,25 @@ internal class MainWindowViewModel : ViewModelBase
         string json = JsonSerializer.Serialize(ActivePack.ToModel(), JsonOptions);
 
         File.WriteAllText(filePath, json);
+    }
+
+    private void LoadFirstSavedPack()
+    {
+        var firstPackFile = GetSavedPackFiles().FirstOrDefault();
+
+        if (firstPackFile is null)
+            return;
+
+        try
+        {
+            ActivePack = new QuestionPackViewModel(
+                LoadQuestionPack(firstPackFile.FilePath));
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"Could not load the first saved pack '{firstPackFile.Name}': {ex.Message}");
+        }
     }
 
 }
