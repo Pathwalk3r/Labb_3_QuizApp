@@ -29,15 +29,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <views:MenuView Grid.Row="0"/>
-        <!--<views:PlayerView 
-            Grid.Row="1"
-            Visibility="{Binding PlayerVisibility}"/>
-        <views:StartView 
-            Grid.Row="1"
-            Visibility="{Binding StartVisibility}"/>
-        <views:ConfigurationView 
-            Grid.Row="1" 
-            Visibility="{Binding ConfigurationVisibility}"/>-->
 
         <ContentControl 
             Grid.Row="1"
