@@ -12,27 +12,30 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock 
-            Text="{Binding CurrentQuestion.Query}" 
-            FontSize="24" 
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="0"
+           Text="{Binding CurrentQuestion.Query}"
+           TextWrapping="Wrap"
+           TextAlignment="Center"
+           MaxWidth="650"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"
+           Margin="16"/>
         <TextBlock
             Text="{Binding TimeRemainingSeconds}"
             FontSize="24"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"/>
         <Grid Grid.Row="1"
-            Width="350"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Button x:Name="Answer1"
@@ -41,8 +44,8 @@
                 CommandParameter="0"
                 Margin="8"
                 Padding="5"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
+                MaxWidth="260"
+                MinWidth="140">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>
@@ -56,8 +59,9 @@
                     </Style>
                 </Button.Style>
                 <TextBlock Text="{Binding Answers[0]}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   MaxWidth="240"/>
             </Button>
 
             <Button x:Name="Answer2"
@@ -66,8 +70,8 @@
                 CommandParameter="1"
                 Margin="8"
                 Padding="5"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
+                MaxWidth="260"
+                MinWidth="140">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>
@@ -81,17 +85,19 @@
                     </Style>
                 </Button.Style>
                 <TextBlock Text="{Binding Answers[1]}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   MaxWidth="240"/>
             </Button>
+
             <Button x:Name="Answer3"
                 Grid.Row="1" Grid.Column="0"
                 Command="{Binding CheckAnswerCommand}"
                 CommandParameter="2"
                 Margin="8"
                 Padding="5"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
+                MaxWidth="260"
+                MinWidth="140">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>
@@ -105,8 +111,9 @@
                     </Style>
                 </Button.Style>
                 <TextBlock Text="{Binding Answers[2]}"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   MaxWidth="240"/>
             </Button>
 
             <Button x:Name="Answer4"
@@ -115,8 +122,8 @@
                 CommandParameter="3"
                 Margin="8"
                 Padding="5"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
+                MaxWidth="260"
+                MinWidth="140">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>
@@ -130,8 +137,9 @@
                     </Style>
                 </Button.Style>
                 <TextBlock Text="{Binding Answers[3]}"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   MaxWidth="240"/>
             </Button>
         </Grid>
     </Grid>

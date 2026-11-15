@@ -29,11 +29,25 @@
                     Command="{Binding SavePackCommand}"
                     Margin="2"/>
             </WrapPanel>
-
-            <ListBox 
-                x:Name="QuestionBox" 
-                Height="325"
-                ItemsSource="{Binding ActivePack.Questions}">
+            <StackPanel Margin="0,0,0,8">
+                <TextBlock Text="Import multiple-choice questions from Open Trivia DB"/>
+                <Slider Minimum="1"
+            Maximum="50"
+            TickFrequency="1"
+            IsSnapToTickEnabled="True"
+            Value="{Binding ImportCountSliderValue, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="{Binding ImportCount, StringFormat={}{0} questions}"/>
+                <Button Content="Import questions"
+            Command="{Binding ImportQuestionsCommand}"
+            Margin="0,4"/>
+                <TextBlock Text="{Binding ImportStatus}"
+               TextWrapping="Wrap"/>
+            </StackPanel>
+             
+            <ListBox x:Name="QuestionBox"
+                    Height="325"
+                    ItemsSource="{Binding ActivePack.Questions}"
+                    SelectedItem="{Binding SelectedQuestion, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
