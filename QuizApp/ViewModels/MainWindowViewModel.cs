@@ -1,6 +1,7 @@
 ﻿using QuizApp.Command;
 using QuizApp.Models;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -55,13 +56,24 @@ internal class MainWindowViewModel : ViewModelBase
         get => _activePack;
         set
         {
+            if (ReferenceEquals(_activePack, value))
+                return;
+
+            if (_activePack is not null)
+                _activePack.Questions.CollectionChanged -= OnQuestionsChanged;
+
             if (SetProperty(ref _activePack, value))
             {
+                if (_activePack is not null)
+                    _activePack.Questions.CollectionChanged += OnQuestionsChanged;
+
                 ConfigurationViewModel?.RaiseActivePackChanged();
                 MenuViewModel?.RaiseActivePackChanged();
 
                 PlayerViewModel?.RaiseActivePackChanged(
                     startTimer: ReferenceEquals(_currentView, PlayerViewModel));
+
+                ShowPlayerCommand?.RaiseCanExecuteChanged();
             }
         }
     }
@@ -85,14 +97,17 @@ internal class MainWindowViewModel : ViewModelBase
         MenuViewModel = new MenuViewModel(this);
 
         ShowStartCommand = new RelayCommand(_ => CurrentView = this);
-        ShowPlayerCommand = new RelayCommand(_ =>
+        ShowPlayerCommand = new RelayCommand(
+        _ =>
         {
-            if (PlayerViewModel is null)
+            if (ActivePack is null || ActivePack.Questions.Count == 0 ||
+                PlayerViewModel is null)
                 return;
 
             PlayerViewModel.StartQuestionTimer();
             CurrentView = PlayerViewModel;
-        });
+        },
+        _ => ActivePack is not null && ActivePack.Questions.Count > 0);
         ShowConfigurationCommand = new RelayCommand(_ => CurrentView = ConfigurationViewModel);
 
         CurrentView = this;
@@ -148,6 +163,11 @@ internal class MainWindowViewModel : ViewModelBase
             MessageBox.Show(
                 $"Could not load the first saved pack '{firstPackFile.Name}': {ex.Message}");
         }
+    }
+
+    private void OnQuestionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        ShowPlayerCommand?.RaiseCanExecuteChanged();
     }
 
 }
