@@ -45,7 +45,9 @@
                 Margin="8"
                 Padding="5"
                 MaxWidth="260"
-                MinWidth="140">
+                MinWidth="140"
+                IsHitTestVisible="{Binding AreAnswersEnabled}"
+                Focusable="{Binding AreAnswersEnabled}">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>
@@ -71,7 +73,9 @@
                 Margin="8"
                 Padding="5"
                 MaxWidth="260"
-                MinWidth="140">
+                MinWidth="140"
+                IsHitTestVisible="{Binding AreAnswersEnabled}"
+                Focusable="{Binding AreAnswersEnabled}">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>
@@ -97,7 +101,9 @@
                 Margin="8"
                 Padding="5"
                 MaxWidth="260"
-                MinWidth="140">
+                MinWidth="140"
+                IsHitTestVisible="{Binding AreAnswersEnabled}"
+                Focusable="{Binding AreAnswersEnabled}">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>
@@ -123,7 +129,9 @@
                 Margin="8"
                 Padding="5"
                 MaxWidth="260"
-                MinWidth="140">
+                MinWidth="140"
+                IsHitTestVisible="{Binding AreAnswersEnabled}"
+                Focusable="{Binding AreAnswersEnabled}">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Style.Triggers>

@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="QuizApp.Views.ResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+        <TextBlock Text="Quiz complete!"
+                   FontSize="32"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,16"/>
+        <TextBlock Text="{Binding ResultText}"
+                   FontSize="24"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,20"/>
+        <Button Content="Play again"
+                Command="{Binding PlayAgainCommand}"
+                Margin="4"
+                Padding="12,6"/>
+        <Button Content="Main menu"
+                Command="{Binding ReturnToMenuCommand}"
+                Margin="4"
+                Padding="12,6"/>
+    </StackPanel>
+</UserControl>

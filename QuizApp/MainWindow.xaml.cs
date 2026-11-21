@@ -22,6 +22,13 @@ namespace QuizApp
             InitializeComponent();
 
             DataContext = new MainWindowViewModel();
+            Loaded += MainWindow_Loaded;
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is MainWindowViewModel viewModel)
+                await viewModel.LoadFirstSavedPackAsync();
         }
     }
 }
