@@ -69,7 +69,7 @@ class MenuViewModel : ViewModelBase
         MainWindowViewModel.ActivePack = new QuestionPackViewModel(pack);
     }
 
-    private void SelectPack(object? parameter)
+    private async void SelectPack(object? parameter)
     {
         if (MainWindowViewModel is null ||
             parameter is not SavedPackFile file)
@@ -77,7 +77,7 @@ class MenuViewModel : ViewModelBase
 
         try
         {
-            var pack = MainWindowViewModel.LoadQuestionPack(file.FilePath);
+            var pack = await MainWindowViewModel.LoadQuestionPackAsync(file.FilePath);
             MainWindowViewModel.ActivePack = new QuestionPackViewModel(pack);
         }
         catch (Exception ex)

@@ -14,7 +14,7 @@ class PlayerViewModel : ViewModelBase
 
     private readonly DispatcherTimer _advanceTimer = new()
     {
-        Interval = TimeSpan.FromSeconds(5)
+        Interval = TimeSpan.FromSeconds(3)
     };
 
     private int _currentQuestionIndex;
@@ -29,67 +29,21 @@ class PlayerViewModel : ViewModelBase
         }
     }
 
-    public Question? CurrentQuestion
+    private List<Question> _roundQuestions = [];
+
+    private int _correctAnswers;
+    public int CorrectAnswers
     {
-        get
-        {
-            var questions = ActivePack?.Questions;
-            if (questions is not null && CurrentQuestionIndex < questions.Count)
-            {
-                return (Question?)questions[CurrentQuestionIndex];
-            }
-            else
-            {
-                return null;
-            }
-        }
+        get => _correctAnswers;
+        private set => SetProperty(ref _correctAnswers, value);
     }
 
-    private string _answer1 = "";
-    private string _answer2 = "";
-    private string _answer3 = "";
-    private string _answer4 = "";
+    public int TotalQuestions => _roundQuestions.Count;
 
-
-    public string Answer1
-    {
-        get => _answer1;
-        set
-        {
-            _answer1 = value;
-            RaisePropertyChanged(nameof(Answer1));
-        }
-    }
-
-    public string Answer2
-    {
-        get => _answer2;
-        set
-        {
-            _answer2 = value;
-            RaisePropertyChanged(nameof(Answer2));
-        }
-    }
-
-    public string Answer3
-    {
-        get => _answer3;
-        set
-        {
-            _answer3 = value;
-            RaisePropertyChanged(nameof(Answer3));
-        }
-    }
-
-    public string Answer4
-    {
-        get => _answer4;
-        set
-        {
-            _answer4 = value;
-            RaisePropertyChanged(nameof(Answer4));
-        }
-    }
+    public Question? CurrentQuestion =>
+        CurrentQuestionIndex >= 0 && CurrentQuestionIndex < _roundQuestions.Count
+            ? _roundQuestions[CurrentQuestionIndex]
+            : null;
 
     private int _correctAnswerIndex = -1;
     public int CorrectAnswerIndex
@@ -143,7 +97,9 @@ class PlayerViewModel : ViewModelBase
     {
         _mainWindowViewModel = mainWindowViewModel;
 
-        CheckAnswerCommand = new RelayCommand(CheckAnswer);
+        CheckAnswerCommand = new RelayCommand(
+            CheckAnswer,
+            _ => CurrentQuestion is not null);
 
         _advanceTimer.Tick += (_, _) =>
         {
@@ -151,41 +107,33 @@ class PlayerViewModel : ViewModelBase
             AdvanceToNextQuestion();
         };
         
-        RandomizeAnswerPosition();
     }
 
     public void RandomizeAnswerPosition()
     {
-        if (ActivePack?.Questions == null ||
-            ActivePack.Questions.Count == 0)
-            return;
-
         CorrectAnswerIndex = -1;
         IncorrectAnswerIndex = -1;
-
         AreAnswersEnabled = true;
         CheckAnswerCommand.RaiseCanExecuteChanged();
 
         var question = CurrentQuestion;
         if (question is null)
-            return;
-
-        List<string> answers = new()
         {
-            question.CorrectAnswer
-        };
+            Answers = [];
+            return;
+        }
 
+        var answers = new List<string> { question.CorrectAnswer };
         answers.AddRange(question.IncorrectAnswer);
-
-        Answers = answers.OrderBy(x => Random.Shared.Next()).ToList();
+        Shuffle(answers);
 
         if (answers.Count != 4)
+        {
+            Answers = [];
             return;
+        }
 
-        Answer1 = answers[0];
-        Answer2 = answers[1];
-        Answer3 = answers[2];
-        Answer4 = answers[3];
+        Answers = answers;
     }
 
     public void CheckAnswer(object? parameter)
@@ -202,13 +150,14 @@ class PlayerViewModel : ViewModelBase
 
         CorrectAnswerIndex = Answers.IndexOf(question.CorrectAnswer);
 
-        if (selectedIndex != CorrectAnswerIndex)
+        if (selectedIndex == CorrectAnswerIndex)
         {
-            IncorrectAnswerIndex = selectedIndex;
+            CorrectAnswers++;
+            IncorrectAnswerIndex = -1;
         }
         else
         {
-            IncorrectAnswerIndex = -1;
+            IncorrectAnswerIndex = selectedIndex;
         }
 
         AreAnswersEnabled = false;
@@ -219,10 +168,18 @@ class PlayerViewModel : ViewModelBase
 
     private void AdvanceToNextQuestion()
     {
-        if (ActivePack?.Questions is not { Count: > 0 } questions)
-            return;
+        _advanceTimer.Stop();
 
-        CurrentQuestionIndex = (CurrentQuestionIndex + 1) % questions.Count;
+        if (CurrentQuestionIndex + 1 >= _roundQuestions.Count)
+        {
+            StopQuestionTimer();
+            _mainWindowViewModel?.ShowQuizResults(
+                CorrectAnswers,
+                _roundQuestions.Count);
+            return;
+        }
+
+        CurrentQuestionIndex++;
         RandomizeAnswerPosition();
         StartQuestionTimer();
     }
@@ -302,23 +259,48 @@ class PlayerViewModel : ViewModelBase
         _advanceTimer.Stop();
         StopQuestionTimer();
 
+        _roundQuestions.Clear();
         CurrentQuestionIndex = 0;
-        RaisePropertyChanged(nameof(ActivePack));
+        CorrectAnswers = 0;
         RaisePropertyChanged(nameof(CurrentQuestion));
+        RaisePropertyChanged(nameof(TotalQuestions));
 
         CorrectAnswerIndex = -1;
         IncorrectAnswerIndex = -1;
-        Answers = new List<string>();
-        Answer1 = "";
-        Answer2 = "";
-        Answer3 = "";
-        Answer4 = "";
+        Answers = [];
         AreAnswersEnabled = true;
 
-        RandomizeAnswerPosition();
+        if (startTimer)
+            StartQuiz();
+    }
 
-        if (startTimer && ActivePack?.Questions.Count > 0)
-            StartQuestionTimer();
+    public void StartQuiz()
+    {
+        if (ActivePack?.Questions is not { Count: > 0 } questions)
+            return;
+
+        _advanceTimer.Stop();
+        StopQuestionTimer();
+
+        _roundQuestions = questions.ToList();
+        Shuffle(_roundQuestions);
+
+        CurrentQuestionIndex = 0;
+        CorrectAnswers = 0;
+        RaisePropertyChanged(nameof(CurrentQuestion));
+        RaisePropertyChanged(nameof(TotalQuestions));
+
+        RandomizeAnswerPosition();
+        StartQuestionTimer();
+    }
+
+    private static void Shuffle<T>(IList<T> items)
+    {
+        for (int i = items.Count - 1; i > 0; i--)
+        {
+            int j = Random.Shared.Next(i + 1);
+            (items[i], items[j]) = (items[j], items[i]);
+        }
     }
 
 }
