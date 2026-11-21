@@ -19,7 +19,11 @@ internal class ConfigurationViewModel : ViewModelBase
     public Question? SelectedQuestion
     {
         get => _selectedQuestion;
-        set => SetProperty(ref _selectedQuestion, value);
+        set
+        {
+            if (SetProperty(ref _selectedQuestion, value))
+                RemoveQuestionCommand.RaiseCanExecuteChanged();
+        }
     }
 
     public RelayCommand AddQuestionCommand { get; }
@@ -31,14 +35,21 @@ internal class ConfigurationViewModel : ViewModelBase
     {
         _mainWindowViewModel = mainWindowViewModel;
 
-        AddQuestionCommand = new RelayCommand(_ => AddQuestion());
-        RemoveQuestionCommand = new RelayCommand(_ => RemoveQuestion());
-        EditPackCommand = new RelayCommand(_ => EditPack());
-        SavePackCommand = new RelayCommand(_ => SavePack());
+        AddQuestionCommand = new RelayCommand(
+            _ => AddQuestion(),
+            _ => ActivePack is not null);
+        RemoveQuestionCommand = new RelayCommand(
+            _ => RemoveQuestion(),
+            _ => ActivePack is not null && SelectedQuestion is not null);
+        EditPackCommand = new RelayCommand(
+            _ => EditPack(),
+            _ => ActivePack is not null);
+        SavePackCommand = new RelayCommand(
+            _ => SavePack(),
+            _ => ActivePack is not null);
         ImportQuestionsCommand = new RelayCommand(
             _ => _ = ImportQuestionsAsync(),
             _ => !IsImporting);
-
     }
 
     private readonly OpenTriviaDbClient _openTriviaDbClient = new();
@@ -79,6 +90,11 @@ internal class ConfigurationViewModel : ViewModelBase
     {
         RaisePropertyChanged(nameof(ActivePack));
         SelectedQuestion = null;
+
+        AddQuestionCommand.RaiseCanExecuteChanged();
+        RemoveQuestionCommand.RaiseCanExecuteChanged();
+        EditPackCommand.RaiseCanExecuteChanged();
+        SavePackCommand.RaiseCanExecuteChanged();
     }
 
     private void AddQuestion()
@@ -124,14 +140,14 @@ internal class ConfigurationViewModel : ViewModelBase
         ActivePack.TimeLimitInSeconds = dialog.ViewModel.TimeLimitInSeconds;
     }
 
-    private void SavePack()
+    private async void SavePack()
     {
         if (_mainWindowViewModel is null || ActivePack is null)
             return;
 
         try
         {
-            _mainWindowViewModel.SaveActivePack();
+            await _mainWindowViewModel.SaveActivePackAsync();
             _mainWindowViewModel.MenuViewModel?.RefreshSavedPacks();
         }
         catch (Exception ex)

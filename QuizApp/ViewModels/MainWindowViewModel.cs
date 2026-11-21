@@ -104,21 +104,20 @@ internal class MainWindowViewModel : ViewModelBase
                 PlayerViewModel is null)
                 return;
 
-            PlayerViewModel.StartQuestionTimer();
+            PlayerViewModel.StartQuiz();
             CurrentView = PlayerViewModel;
         },
         _ => ActivePack is not null && ActivePack.Questions.Count > 0);
         ShowConfigurationCommand = new RelayCommand(_ => CurrentView = ConfigurationViewModel);
 
         CurrentView = this;
-        LoadFirstSavedPack();
     }
 
-    public QuestionPack LoadQuestionPack(string filePath)
+    public async Task<QuestionPack> LoadQuestionPackAsync(string filePath)
     {
-        var pack = JsonSerializer.Deserialize<QuestionPack>(
-            File.ReadAllText(filePath),
-            JsonOptions);
+        string json = await File.ReadAllTextAsync(filePath);
+
+        var pack = JsonSerializer.Deserialize<QuestionPack>(json, JsonOptions);
 
         if (pack?.Questions is null)
             throw new InvalidDataException("The file is not a valid question pack.");
@@ -126,7 +125,7 @@ internal class MainWindowViewModel : ViewModelBase
         return pack;
     }
 
-    public void SaveActivePack()
+    public async Task SaveActivePackAsync()
     {
         if (ActivePack is null)
             throw new InvalidOperationException("There is no active question pack.");
@@ -143,25 +142,24 @@ internal class MainWindowViewModel : ViewModelBase
         string filePath = Path.Combine(QuestionPacksDirectory, $"{fileName}.json");
         string json = JsonSerializer.Serialize(ActivePack.ToModel(), JsonOptions);
 
-        File.WriteAllText(filePath, json);
+        await File.WriteAllTextAsync(filePath, json);
     }
 
-    private void LoadFirstSavedPack()
+    public async Task LoadFirstSavedPackAsync()
     {
-        var firstPackFile = GetSavedPackFiles().FirstOrDefault();
-
-        if (firstPackFile is null)
-            return;
-
         try
         {
-            ActivePack = new QuestionPackViewModel(
-                LoadQuestionPack(firstPackFile.FilePath));
+            var firstPackFile = GetSavedPackFiles().FirstOrDefault();
+
+            if (firstPackFile is null)
+                return;
+
+            var pack = await LoadQuestionPackAsync(firstPackFile.FilePath);
+            ActivePack = new QuestionPackViewModel(pack);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(
-                $"Could not load the first saved pack '{firstPackFile.Name}': {ex.Message}");
+            MessageBox.Show($"Could not load a saved question pack: {ex.Message}");
         }
     }
 
@@ -170,4 +168,11 @@ internal class MainWindowViewModel : ViewModelBase
         ShowPlayerCommand?.RaiseCanExecuteChanged();
     }
 
+    public void ShowQuizResults(int correctAnswers, int totalQuestions)
+    {
+        CurrentView = new QuizResultViewModel(
+            correctAnswers,
+            totalQuestions,
+            this);
+    }
 }
